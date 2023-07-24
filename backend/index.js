@@ -9,10 +9,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const pool = new Pool({
-  user: process.env.DB_USER || 'psql',
+  user: process.env.DB_USER || 'psql', //'postgres'
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_NAME || 'your_database',
-  password: process.env.DB_PASSWORD || 'psql',
+  password: process.env.DB_PASSWORD ||  'psql',// 'postgres' 
   port: process.env.DB_PORT || 5432,
 });
 
