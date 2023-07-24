@@ -1,0 +1,53 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DB_USER: psql
+      DB_HOST: my_test_database_container # Use the name of the PostgreSQL container as the hostname
+      DB_NAME: your_database
+      DB_PASSWORD: psql
+      DB_PORT: 5432 # Set this to the port on which PostgreSQL is running inside the container
+    depends_on:
+      - database
+    container_name: my_test_backend_app_container
+    image: my_test_backend_app_image
+    ports:
+      - 5000:5000 # Map the backend container's port 5000 to the host's port 5000
+    volumes:
+      - ./backend:/usr/src/app/backend # Mount the backend directory as a volume to apply changes without rebuilding the image
+    networks:
+      - my_network
+
+  database:
+    container_name: my_test_database_container
+    image: postgres:latest
+    ports:
+      - 5432:5432 # Map the database container's port 5432 to the host's port 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: my_test_frontend_app_container
+    image: my_test_frontend_app_image
+    ports:
+      - 3000:3000 # Map the frontend container's port 3000 to the host's port 3000
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+    depends_on:
+      - backend
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+volumes:
+  pgdata:
